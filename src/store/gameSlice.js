@@ -1,4 +1,4 @@
-import {createSlice} from '@reduxjs/toolkit'
+import {createSlice, current} from '@reduxjs/toolkit'
 import {words} from 'popular-english-words'
 
 const letters = {}
@@ -42,20 +42,21 @@ export const gameSlice = createSlice({
                 let known = state.word.charAt(i)
                 let inWord = state.word.includes(letter)
                 if(letter === known){
-                    if (!state.letters.known.seen) correct++// if not seen before and we just got it correct
-                    state.letters.known = {
+                    if (!state.letters[known].seen) state.correct++// if not seen before and we just got it correct
+                    state.letters[letter] = {
                         seen: true,
                         inPosition: true,
                         inWord: true
                     }
-                } else if(inWord){
-                    state.letters.known = {
+                } else if(inWord && !state.letters[letter].inPosition){ // don't need to update if we already known
+                    state.letters[letter] = {
                         seen: true,
                         inPosition: false,
                         inWord: true
                     }
-                } else state.letters.known = {seen: true, ...state.letters.known}
+                } else state.letters[letter] = {...state.letters[letter], seen: true}
             }
+            console.log(current(state.letters))
         }
     }
 })

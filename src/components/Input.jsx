@@ -24,16 +24,16 @@ const Input = () => {
     }, [wordGuess])
 
     return (
-    <form onSubmit={handleSubmit} className='flex w-2/3 h-1/6'>
+    <form onSubmit={handleSubmit} className='flex w-full h-1/6'>
             <input 
             type="text"
             value={wordGuess}
             placeholder='Guess the word'
             onChange={(e) => setWordGuess(e.target.value)} 
-            className='w-full rounded-l-lg px-3 py-1.5 border text-black bg-slate-300'
+            className='w-full rounded-tl-lg px-3 py-1.5 border text-black bg-slate-300'
             />
             <button type="submit"
-            className='rounded-r-lg px-3 bg-gray-600'>
+            className='rounded-tr-lg px-3 bg-gray-600'>
                 ↑
             </button>
         </form>

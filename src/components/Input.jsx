@@ -17,12 +17,6 @@ const Input = () => {
         return
     }
 
-    //below is just for debugging
-    useEffect(() => {
-        console.log(wordGuess)
-        console.log(numGuesses)
-    }, [wordGuess])
-
     return (
     <form onSubmit={handleSubmit} className='flex w-full h-1/6'>
             <input 

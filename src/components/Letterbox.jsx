@@ -8,7 +8,7 @@ const Letterbox = ({
 
 	return (
 		//probably also want to change text color based on something else
-		<div className={`${bgColor} border shadow-sm w-16 rounded-lg py-4 m-2 text-blue-500 text-center min-w-8 ${classNames} align-middle min-h-8`}
+		<div className={`${bgColor} border w-16 rounded-lg py-4 m-2 text-blue-500 text-center min-w-8 ${classNames} align-middle min-h-8 shadow-md`}
 		 {...props}>
 			{letter}
 		</div>

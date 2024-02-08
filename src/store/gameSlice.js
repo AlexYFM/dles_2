@@ -56,7 +56,6 @@ export const gameSlice = createSlice({
                     }
                 } else state.letters[letter] = {...state.letters[letter], seen: true}
             }
-            console.log(current(state.letters))
         }
     }
 })

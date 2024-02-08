@@ -11,8 +11,25 @@ const Gameboard = () => {
 
     return (
         <div className='flex justify-center'>
-            <div className='flex justify-center'>
-                
+            <div className='inline-block justify-center'>
+                {guesses.map(guess => {
+                    const guessComps = []
+                    for(let i=0; i<guess.length; i++){                       
+                        let letter = guess.charAt(i)
+                        let prop = letters[letter]
+                        let bgColor = 'bg-white'
+                        if(prop.seen){
+                            if(prop.inPosition) bgColor = 'bg-green-500'
+                            else if(prop.inWord) bgColor = 'bg-yellow-500'
+                            else bgColor = 'bg-gray-200'
+                        }
+                        guessComps.push(<Letterbox letter={letter} key={Math.random()} bgColor={bgColor}/>)
+                    }
+                    return (<div className='w-full justify-center flex'>
+                        {guessComps}
+                        </div>)
+                }
+                )}
             </div>
             <div className='flex w-10/12 rounded-lg shadow-sm border border-black flex-wrap absolute bottom-0'>
                     <Input />

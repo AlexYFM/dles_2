@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { newGame, guess } from '../store/gameSlice'
 import Input from './Input'
 import Letterbox from './Letterbox'
@@ -8,14 +8,27 @@ import { useSelector } from 'react-redux'
 const Gameboard = () => {
     const letters = useSelector(state => state.letters)
     const guesses = useSelector(state => state.guesses)
+    const [board, setBoard] = useState(["     ", "     ", "     ", "     ", "     ", "     "]) //there's probably a better way to do this, but I would have to modify the guesses.map loop
+
+    useEffect(() => {
+        setBoard((prev) => {
+            // console.log([...guesses, ...prev.slice(guesses.length)])
+            return [...guesses, ...prev.slice(guesses.length)] //this should slowly update board
+        })
+    }, [guesses])
 
     return (
         <div className='flex justify-center'>
             <div className='inline-block justify-center'>
-                {guesses.map(guess => {
+                {board.map(guess => {
                     const guessComps = []
                     for(let i=0; i<guess.length; i++){                       
                         let letter = guess.charAt(i)
+                        if(letter===' '){
+                            guessComps.push(<Letterbox key={Math.random()}/>)
+                            continue
+                        }
+                        console.log(letter)
                         let prop = letters[letter]
                         let bgColor = 'bg-white'
                         if(prop.seen){

@@ -16,7 +16,7 @@ for (let i=97; i<=122; i++){
 
 //default max guesses should be 6 following original wordle
 const initialState = {
-    guesses: [],
+    guesses: [], // each guess should be an object that stores what the letter was at that instant
     numGuesses: 0,
     letters: letters,
     word: '',
@@ -31,18 +31,16 @@ export const gameSlice = createSlice({
             state.word = String(wordList[Math.floor(Math.random()*5000)])
             state.letters = letters
             state.numGuesses = 0
-            state.correct = 0
         },
         guess: (state, action) => { // assuming something else is validing action/input
             state.numGuesses++
             const guess = String(action.payload) // should probably be doing .guess but I'm not really doing too much here
-            state.guesses.push(guess) // for display 
+            state.guesses.push(guess) // for display -- wrong fix later
             for(let i=0; i<guess.length; i++){
                 let letter = guess.charAt(i)
                 let known = state.word.charAt(i)
                 let inWord = state.word.includes(letter)
                 if(letter === known){
-                    if (!state.letters[known].seen) state.correct++// if not seen before and we just got it correct
                     state.letters[letter] = {
                         seen: true,
                         inPosition: true,

@@ -35,7 +35,7 @@ export const gameSlice = createSlice({
             state.numGuesses++
             const guess = String(action.payload) // should probably be doing .guess but I'm not really doing too much here
             // state.guesses.push(guess) // for display -- wrong fix later
-            const review = {} // should be storing letters here
+            const review = []
             for(let i=0; i<guess.length; i++){
                 let letter = guess.charAt(i)
                 let known = state.word.charAt(i)
@@ -46,14 +46,20 @@ export const gameSlice = createSlice({
                         inPosition: true,
                         inWord: true
                     }
-                    review[letter] = state.letters[letter]
+                    review.push({
+                        char: letter,
+                        seen: true,
+                        inPosition: true,
+                        inWord: true
+                    })
                 } else if(inWord){ 
                     // the guess needs to be updated independant of the board
-                    review[letter] = {
+                    review.push({
+                        char: letter,
                         seen: true,
                         inPosition: false,
                         inWord: true
-                    }
+                    })
                     // don't need to update if we already known
                     if(!state.letters[letter].inPosition){
                         state.letters[letter] = {
@@ -63,11 +69,12 @@ export const gameSlice = createSlice({
                         }
                     }
                 } else{
-                    review[letter] = {
+                    review.push({
+                        char: letter,
                         seen: true,
                         inPosition: false,
                         inWord: false
-                    }
+                    })
                     state.letters[letter] = {...state.letters[letter], seen: true}
                 }
             }

@@ -48,7 +48,7 @@ const Gameboard = () => {
                     const guessComps = []
                     if(guess.length===0){ // checking for blank answer 
                         for(let i=0; i<5; i++){
-                            guessComps.push(<Letterbox key={Math.random()}/>)
+                            guessComps.push(<Letterbox key={Math.random()} letter={'a'} classNames='text-opacity-0'/>)
                         }
                         return (<div className='w-full justify-center flex' key={Math.random()}>{guessComps}</div>)
                     }

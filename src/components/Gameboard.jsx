@@ -1,24 +1,48 @@
 import React, { useEffect, useState } from 'react'
-import { newGame, guess } from '../store/gameSlice'
+import { newGame } from '../store/gameSlice'
 import Input from './Input'
 import Letterbox from './Letterbox'
+import Popup from './Popup'
 import { useSelector } from 'react-redux'
 
 
 const Gameboard = () => {
     const letters = useSelector(state => state.letters)
     const guesses = useSelector(state => state.guesses)
+    const answer = useSelector(state => state.word)
+    const numGuesses = useSelector(state => state.numGuesses)
+    const [gameover, setGameover] = useState(false) // use this to conditionally render modal
     const [board, setBoard] = useState([[], [], [], [], [], []]) 
+    const [win, setWin] = useState(false)
+    const [showModal, setShowModal] = useState(false) // there's a better way to do what i'm doing
 
     useEffect(() => {
+        if(!guesses.length) return
         setBoard((prev) => {
-            console.log([...guesses, ...prev.slice(guesses.length)])
             return [...guesses, ...prev.slice(guesses.length)] //this should slowly update board -- slices isn't working properly, but shouldn't matter so long as game is stopped at 6 guesses
         })
+        //now check to see if the game is over 
+        const last = guesses[guesses.length-1]
+        let last_word = ""
+        last.map(letter => last_word += letter.char)
+        if (last_word===answer){
+            setWin(true) // assumes that there will 
+            setGameover(true)
+            setShowModal(true)
+        }
+        else if (numGuesses===6){
+            setGameover(true)
+            setShowModal(true)
+        }
+        console.log(last_word, answer, win, gameover, showModal)
     }, [guesses])
 
     return (
         <div className='flex justify-center'>
+            {<Popup 
+            handleClose={() => setShowModal(false)}
+            show={showModal}
+            />}
             <div className='inline-block justify-center'>
                 {board.map(guess => {
                     const guessComps = []
@@ -26,7 +50,7 @@ const Gameboard = () => {
                         for(let i=0; i<5; i++){
                             guessComps.push(<Letterbox key={Math.random()}/>)
                         }
-                        return (<div className='w-full justify-center flex'>{guessComps}</div>)
+                        return (<div className='w-full justify-center flex' key={Math.random()}>{guessComps}</div>)
                     }
                     //otherwise, guess exists
                     guess.forEach(letter => {
@@ -38,7 +62,7 @@ const Gameboard = () => {
                         }
                         guessComps.push(<Letterbox letter={letter.char} key={Math.random()} bgColor={bgColor}/>)
                     })
-                    return (<div className='w-full justify-center flex'>{guessComps}</div>)
+                    return (<div className='w-full justify-center flex' key={Math.random()}>{guessComps}</div>)
                 }
                 )}
             </div>

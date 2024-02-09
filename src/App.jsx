@@ -10,13 +10,11 @@ import Gameboard from './components/Gameboard'
 function App() {
 	const dispatch = useDispatch()
 	const word = useSelector((state) => state.word) 
-	console.log(word)
 	useEffect(() => {
 		dispatch(newGame())
 	}, [])
 	return (
 		<>
-			<h1 className=' text-xl font-bold text-red-500'>{JSON.stringify(word)}</h1>
 			<div className={`flex flex-wrap justify-center`}>
 				<Gameboard />
 			</div>

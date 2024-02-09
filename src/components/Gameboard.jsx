@@ -8,11 +8,11 @@ import { useSelector } from 'react-redux'
 const Gameboard = () => {
     const letters = useSelector(state => state.letters)
     const guesses = useSelector(state => state.guesses)
-    const [board, setBoard] = useState(["     ", "     ", "     ", "     ", "     ", "     "]) //there's probably a better way to do this, but I would have to modify the guesses.map loop
+    const [board, setBoard] = useState([{}, {}, {}, {}, {}, {}]) 
 
     useEffect(() => {
         setBoard((prev) => {
-            // console.log([...guesses, ...prev.slice(guesses.length)])
+            console.log([...guesses, ...prev.slice(guesses.length)])
             return [...guesses, ...prev.slice(guesses.length)] //this should slowly update board
         })
     }, [guesses])
@@ -22,25 +22,32 @@ const Gameboard = () => {
             <div className='inline-block justify-center'>
                 {board.map(guess => {
                     const guessComps = []
-                    for(let i=0; i<guess.length; i++){                       
-                        let letter = guess.charAt(i)
-                        if(letter===' '){
+                    if(Object.keys(guess).length===0){ // checking for blank answer 
+                        for(let i=0; i<5; i++){
                             guessComps.push(<Letterbox key={Math.random()}/>)
-                            continue
                         }
-                        console.log(letter)
-                        let prop = letters[letter]
+                        return (<div className='w-full justify-center flex'>{guessComps}</div>)
+                    }
+                    //otherwise, guess exists
+                    for (let letter in guess){
                         let bgColor = 'bg-white'
-                        if(prop.seen){
-                            if(prop.inPosition) bgColor = 'bg-green-500'
-                            else if(prop.inWord) bgColor = 'bg-yellow-500'
+                        if(guess[letter].seen){
+                            if(guess[letter].inPosition) bgColor = 'bg-green-500'
+                            else if(guess[letter].inWord) bgColor = 'bg-yellow-500'
                             else bgColor = 'bg-gray-200'
                         }
                         guessComps.push(<Letterbox letter={letter} key={Math.random()} bgColor={bgColor}/>)
                     }
-                    return (<div className='w-full justify-center flex'>
-                        {guessComps}
-                        </div>)
+                    return (<div className='w-full justify-center flex'>{guessComps}</div>)
+                    Object.entries(guess).map((letter) => {
+                        let bgColor = 'bg-white'
+                        if(letter[1].seen){
+                            if(letter[1].inPosition) bgColor = 'bg-green-500'
+                            else if(letter[1].inWord) bgColor = 'bg-yellow-500'
+                            else bgColor = 'bg-gray-200'
+                        }
+                        return (<Letterbox letter={letter[0]} key={Math.random()} bgColor={bgColor}/>)
+                    })
                 }
                 )}
             </div>

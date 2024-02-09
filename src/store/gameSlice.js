@@ -20,7 +20,6 @@ const initialState = {
     numGuesses: 0,
     letters: letters,
     word: '',
-    correct: 0
 }
 
 export const gameSlice = createSlice({
@@ -35,7 +34,8 @@ export const gameSlice = createSlice({
         guess: (state, action) => { // assuming something else is validing action/input
             state.numGuesses++
             const guess = String(action.payload) // should probably be doing .guess but I'm not really doing too much here
-            state.guesses.push(guess) // for display -- wrong fix later
+            // state.guesses.push(guess) // for display -- wrong fix later
+            const review = {} // should be storing letters here
             for(let i=0; i<guess.length; i++){
                 let letter = guess.charAt(i)
                 let known = state.word.charAt(i)
@@ -46,14 +46,32 @@ export const gameSlice = createSlice({
                         inPosition: true,
                         inWord: true
                     }
-                } else if(inWord && !state.letters[letter].inPosition){ // don't need to update if we already known
-                    state.letters[letter] = {
+                    review[letter] = state.letters[letter]
+                } else if(inWord){ 
+                    // the guess needs to be updated independant of the board
+                    review[letter] = {
                         seen: true,
                         inPosition: false,
                         inWord: true
                     }
-                } else state.letters[letter] = {...state.letters[letter], seen: true}
+                    // don't need to update if we already known
+                    if(!state.letters[letter].inPosition){
+                        state.letters[letter] = {
+                            seen: true,
+                            inPosition: false,
+                            inWord: true
+                        }
+                    }
+                } else{
+                    review[letter] = {
+                        seen: true,
+                        inPosition: false,
+                        inWord: false
+                    }
+                    state.letters[letter] = {...state.letters[letter], seen: true}
+                }
             }
+            state.guesses.push(review)
         }
     }
 })

@@ -4,7 +4,7 @@ import Input from './Input'
 import Letterbox from './Letterbox'
 import Popup from './Popup'
 import { useSelector } from 'react-redux'
-
+import RestartButton from './RestartButton'
 
 const Gameboard = () => {
     const letters = useSelector(state => state.letters)
@@ -17,7 +17,13 @@ const Gameboard = () => {
     const [showModal, setShowModal] = useState(false) // there's a better way to do what i'm doing
 
     useEffect(() => {
-        if(!guesses.length) return
+        if(!guesses.length && gameover){ //restarting game
+            setWin(false)
+            setGameover(false)
+            setBoard([[], [], [], [], [], []])
+            return
+        }
+        if(!guesses.length) return // initially game shouldn't care
         setBoard((prev) => {
             return [...guesses, ...prev.slice(guesses.length)] //this should slowly update board -- slices isn't working properly, but shouldn't matter so long as game is stopped at 6 guesses
         })
@@ -34,7 +40,6 @@ const Gameboard = () => {
             setGameover(true)
             setShowModal(true)
         }
-        console.log(last_word, answer, win, gameover, showModal)
     }, [guesses])
 
     return (
@@ -42,6 +47,7 @@ const Gameboard = () => {
             {<Popup 
             handleClose={() => setShowModal(false)}
             show={showModal}
+            win={win}
             />}
             <div className='inline-block justify-center'>
                 {board.map(guess => {
@@ -65,6 +71,7 @@ const Gameboard = () => {
                     return (<div className='w-full justify-center flex' key={Math.random()}>{guessComps}</div>)
                 }
                 )}
+                {gameover && <RestartButton />}
             </div>
             <div className='flex w-10/12 rounded-lg shadow-sm border border-black flex-wrap absolute bottom-0'>
                     <Input />

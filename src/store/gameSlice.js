@@ -30,6 +30,7 @@ export const gameSlice = createSlice({
             state.word = String(wordList[Math.floor(Math.random()*5000)])
             state.letters = letters
             state.numGuesses = 0
+            state.guesses = []
         },
         guess: (state, action) => { // assuming something else is validing action/input
             state.numGuesses++
